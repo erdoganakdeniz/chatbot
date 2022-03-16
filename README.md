@@ -19,7 +19,7 @@ Projeyi klonlayın
 Proje dizinine gidin
 
 ```bash
-  cd my-project
+  cd chatbot
 ```
 
 Gerekli paketleri yükleyin
