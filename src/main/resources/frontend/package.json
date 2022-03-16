@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "case": "^1.6.3",
+    "express": "^4.17.3",
+    "raphael": "^2.3.0",
+    "require": "^2.4.20",
+    "require-node": "^2.0.8",
+    "requirejs": "^2.3.6",
+    "socket.io-client": "^4.4.1",
+    "socket.io-json-parser": "^3.0.0"
+  }
+}

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Chatbot by ErdoganAkdeniz</title>
+</head>
+<body>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Red+Hat+Display:400,500,900&display=swap");
+    body,
+    html {
+      font-family: Red hat Display, sans-serif;
+      font-weight: 400;
+      line-height: 1.25em;
+      letter-spacing: 0.025em;
+      color: #333;
+      background: #f7f7f7;
+    }
+    .center {
+      position: absolute;
+      top: 50%;
+      left: calc(50%);
+      transform: translate(-50%, -50%);
+    }
+    .pic {
+      width: 4rem;
+      height: 4rem;
+      background-size: cover;
+      background-position: center;
+      border-radius: 50%;
+    }
+    
+    .contact {
+      position: relative;
+      margin-bottom: 1rem;
+      padding-left: 5rem;
+      height: 4.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .contact .pic {
+      position: absolute;
+      right: 130px;
+    }
+    .contact .name {
+      font-weight: 500;
+      margin-bottom: 0.125rem;
+    }
+    .contact .message,
+    .contact .seen {
+      font-size: 0.9rem;
+      color: #999;
+    }
+    .contact .badge {
+      box-sizing: border-box;
+      position: absolute;
+      width: 1.5rem;
+      height: 1.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+      padding-top: 0.125rem;
+      border-radius: 1rem;
+      top: 0;
+      left: 2.5rem;
+      background: #333;
+      color: white;
+    }
+    
+    .contacts {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(-6rem, -50%);
+      width: 24rem;
+      height: 32rem;
+      padding: 1rem 2rem 1rem 1rem;
+      box-sizing: border-box;
+      border-radius: 1rem 0 0 1rem;
+      cursor: pointer;
+      background: white;
+      box-shadow: 0 0 8rem 0 rgba(0, 0, 0, 0.1), 2rem 2rem 4rem -3rem rgba(0, 0, 0, 0.5);
+      transition: transform 500ms;
+    }
+    .contacts h2 {
+      margin: 0.5rem 0 1.5rem 5rem;
+    }
+    .contacts .fa-bars {
+      position: absolute;
+      left: 2.25rem;
+      color: #999;
+      transition: color 200ms;
+    }
+    .contacts .fa-bars:hover {
+      color: #666;
+    }
+    .contacts .contact:last-child {
+      margin: 0;
+    }
+    .contacts:hover {
+      transform: translate(-23rem, -50%);
+    }
+    
+    .chat {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      width: 24rem;
+      height: 38rem;
+      z-index: 2;
+      box-sizing: border-box;
+      border-radius: 1rem;
+      background: white;
+      box-shadow: 0 0 8rem 0 rgba(0, 0, 0, 0.1), 0rem 2rem 4rem -3rem rgba(0, 0, 0, 0.5);
+    }
+    .chat .contact {
+      flex-basis: 3.5rem;
+      flex-shrink: 0;
+      margin: 1rem;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .contact .bar {
+        margin-top: 1rem;
+        position: fixed;
+        top: 0;
+    }
+    .chat .messages {
+      flex-shrink: 2;
+      overflow-y: auto;
+    }
+    .chat .messages .time {
+      font-size: 0.8rem;
+      background: #eee;
+      padding: 0.25rem 1rem;
+      border-radius: 2rem;
+      color: #999;
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
+      width: fit-content;
+      margin: 0 auto;
+    }
+    .chat .messages .message {
+      box-sizing: border-box;
+      padding: 0.5rem 1rem;
+      margin: 1rem;
+      background: #e4e4e4;
+      border-radius: 1.125rem 1.125rem 1.125rem 0;
+      min-height: 2.25rem;
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
+      width: fit-content;
+      max-width: 66%;
+      box-shadow: 0 0 2rem rgba(0, 0, 0, 0.075), 0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.1);
+    }
+    .chat .messages .message.parker {
+      margin: 1rem 1rem 1rem auto;
+      border-radius: 1.125rem 1.125rem 0 1.125rem;
+      background: #2884e4;
+      color: white;
+    }
+    .chat .messages .message .typing {
+      display: inline-block;
+      width: 0.8rem;
+      height: 0.8rem;
+      margin-right: 0rem;
+      box-sizing: border-box;
+      background: #ccc;
+      border-radius: 50%;
+    }
+    .chat .messages .message .typing.typing-1 {
+      -webkit-animation: typing 3s infinite;
+              animation: typing 3s infinite;
+    }
+    .chat .messages .message .typing.typing-2 {
+      -webkit-animation: typing 3s 250ms infinite;
+              animation: typing 3s 250ms infinite;
+    }
+    .chat .messages .message .typing.typing-3 {
+      -webkit-animation: typing 3s 500ms infinite;
+              animation: typing 3s 500ms infinite;
+    }
+    .chat .input {
+      box-sizing: border-box;
+      flex-basis: 4rem;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 0.5rem 0 1.5rem;
+    }
+    .chat .input i {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      color: #666;
+      cursor: pointer;
+      transition: color 200ms;
+    }
+    .chat .input i:hover {
+      color: #333;
+    }
+    .chat .input input {
+      border: none;
+      background-image: none;
+      background-color: white;
+      padding: 0.5rem 1rem;
+      margin-right: 1rem;
+      border-radius: 1.125rem;
+      flex-grow: 2;
+      box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1), 0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.2);
+      font-family: Red hat Display, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.025em;
+    }
+    .chat .input input:placeholder {
+      color: #999;
+    }
+    
+    @-webkit-keyframes typing {
+      0%, 75%, 100% {
+        transform: translate(0, 0.25rem) scale(0.9);
+        opacity: 0.5;
+      }
+      25% {
+        transform: translate(0, -0.25rem) scale(1);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes typing {
+      0%, 75%, 100% {
+        transform: translate(0, 0.25rem) scale(0.9);
+        opacity: 0.5;
+      }
+      25% {
+        transform: translate(0, -0.25rem) scale(1);
+        opacity: 1;
+      }
+    }
+    .pic.stark {
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANAAAADyCAMAAAALHrt7AAABaFBMVEX////+/P6rLIZoLZGsLIa7K4PmKnyxK4WoLIaiLIfKK4GLLIvHK4GmLIe+K4OSLIqeLIhxLY+1K4R6LY54LY6ELIzOK4B/LY2YLInCK4LWKn+OLIvaKn50LY/gKn356PHz7fTy5vHux9vdx93k1eXzx9r58/n24uvhx93r1eTf0+XUq8rTq8rhs8zn4OzWx9/JhLPDr8+LE4Piq8jiAHJrIYyshbilGYC2UJhxFIeXUZ19E4WCE4TLncGTGYN1IYqbGYK0hba6AHihRpStEn3EUJbCg7LbhLDqq8fng63QAHVhEYlcEYpvAISFUaCOUZ+3aqbGaqPYhLGoV5vZaqDVT5PlT5HmAG5YAIdtN5W2ociIYaeRAH+0aqafUJyyAXrPT5TmaZ6ScK98Spyrkb+abKqHQJbAqMyZXqNpAIXJutaTbq6vQpHPk7yvYqG7jrrKeKvmPobIXpz2u9HylrnTbKLyn77SVpalx756AAAS/UlEQVR4nO3di1sTxxYA8E0gCQkkJAECCQlEKoFUQaoJCwUBaaotQWtpK6hYarUPrbTqbXv//TtndpPdOXM2zD7ywOv5+vXTmOr+nN0zZ8/ObDXtY3iI0Mt6/WWo30cRXHxWbw4NNeuf9fs4AopPXxwO8Wg+/rTfxxJAlH8+GWrHydPVfh+P33h5WB+yRb35st9H5C/+OBxC0Xza72PyE+WWp87/YZHJnFzms27VBJ2sVyr8WspkMs3LnBlM0Iur8JOrL+oZAN3o91H5CANUb/30I2hAYrXc/lGTAL1u/fTq5biabjw+OVk3f0yB6iao8uLV5qvBr4ZWn8JZdmhOnybILEtDAuiXeqlU2vx1sEcptG4WBo+NnwMokxnK8MvmRiZjB00yT2my9OqXcp8OViE+a7brHGNQVpsGovlgdfWB+WOz6A4BB2L3/qDeWLSragtUMRGZerNZN3/4yjjJQjA8XDS5Ofm60+/bpyj/LJRt5l/6k5OhjBDsFDN+JdTicNI3V/t35HSgqroFYhdO0+6pb/5m/kLI4kxOTOzeX6/069CpeD3UbN8giCA2SO2TLVN/ZR22CdrlHha7bWr/4+qD9tnWfPGSizK267z88yvjbNt8YDuxDNDu+sTuhBmbv37S+2MnomJdPPXDJ9qNJgaxdMFOu1KpLgxBaIJfPDe0l/cN0vT09Obv5Z4eOhlPrIvn8OeyxkEZBAq9ysAkKlz4HDTBQFr5l03OYbF7/68+p/Abj5vW2cbz8Q0jCSBQiQLBacan3E9/3Zw2Y3e6ryn8ZbsBUm8VAOqgiTZI037b3G2Rtta1vkW55ak327O9NxArmtqDdL9/c1ILdGjrTjmCJkmQldhWf+ekqamt/pXgZg/ksf2WzQk0eRFI0z6ZYhwG6t+EZIBeCJ/RIJ6ihTuF0DSk6k1x6vl1IEAPhM9cgGDmEUGfDyyopACavvQg8Rq6VKCSH9B2H0G8zEGgTfAg0H0n0FZfQVKZxUDsngCDYBKVQSxFDxjoxuOTOuoRlvn1ogLic85AgVafQlWAnhxcXlDopVET1MXHVRxEnnKTaqApGTQ62gNQuz1VFythpxGaVALxFI1Bowx0PdCDl8PWnqJAxAiRoGkEmuoTSGhPKY0Qy9AEaFoJNNp10BOhPaUKmpxAID6JDgDIdodNgl4FDPqxuyDjSYJ5S/qiF6CujlDI1gw9fFqGfluGAJVKqqCt/o7Qa+tJQhNuSdfrUOZIoBIJmhg40KdWM7RuNAjXoaErgWAS/Ub4jIFg0vEOmr2pAlq+7Yq9brWnTsx2tDpowgVoG4FmWaiAnp3unH6h7vntxLp4WtWbI2iXAk2rgUY9gpZPZ2ZmdtTH6Gn74rHamO5GSAax0wuD4HrxBrq9w0DpZ4qcFgha71b4A/HrRQSN+gKlZ9IuQA+45w/hERQNgjJHBrHzSwE06guUdg1qig1MR5B0DTGO0gjRoPFxFdBe70CfGD1qEbSlDBr/fwY9VKAYoQy6HzRovHugTF0ClUqXFlS3Vny0Yh2W5hCgCT+g2W6AXj998QR9pA6C5/EeQbPMEyyofO1amXlYmXP4R4CgLd7OIUDbCMTnnABBVZ1FVeM3bidX1EC7iqApGcSuF0WQQo3GQPF4HIGSyeRI8o1m1KDiqjVXoAkJBMOBQDwBqIFUis7be3EJVNGTIywMUFMNNKkEmvIFUqqiKVDZLWiXr2TBIFbm+ACNSyC12wIaNBIACBKAAmibAvEEgEAzfkFhGpS5DKCkDAqHgwB97g00HjgoHO4EKg06KOkMkjZYPOCrwXoCWvYG0pmHBA1rfE2oBIKlORKITaLeQazMCRKUJEHDw8NahgKVKNCEH9CsEugLX6Dh4e6BRhGIT6LBgkZ0ETQfEGhqCoG2WdmmCprZkUFpJRCbcjCo0RE0qQTio4FB/M7NKyjtExSjQbuwGixA0E0SBKeXBEqn93yAYjToG0jREghWhHoHsetFBM3MEKC0L1As1jMQTwDdBsUcQb9fAlA4rH/bQ9Bst0HhTqBSabBA19Dhh67gOO8IgjlHBk34Ac0GCVrZ06XgZRsN4kuNJBCsZPEMghztDbRBgKp7UOaMtIPX1FC1kaBsF0Cz/kBxBDrXuSdp53APAcpm3YLuSKDRgEFxDFrTLY5teDqCJtVAU1MSCBIAAt0kQKdQFhCgtASKEyCaMxxDoDPwAGiSBu2KoDu70M1VBI1j0Ay0pyRQWgLFKRB47Bmh0aBB2RYIL6nWfoenihRoCoG2nUDjGDQjgdI8AaiAwHNuz9rzazEo2xxA8hpxBpqWQVvECHHQjxgEFwwFqvoA3RY+O+cZjQZNugGRI4RB48GDwgi0drlBUBX4BPGFHwjEn4j0AJTU+wyaVQWdKoCgKPAPYnPOYIOGh1VBkYjGF4OpgLZJEMvRXQexOUc/VwFFWGgTvkCzEqjMQd8JnzmB4j5AbDgwKNIRhPf23YH2lAJIu3O6syMeOwelUVIop3lGEw90A8o2CtTAp1zWJWhK2qx4B64XFZC2/Owv8ZEtA6WhbrODjCc8TPTG/ukGr3IoEB6hzqBpDJryA5KDjRBcL9ahX98zPUB6aPGDAcEKZEXQKAJBe0oJlLaDlt9YHJh4rPNuY4QAxVjZpgLaN0DGzjGvIEgAbkHX+DN5y8PSwJ8dQTE1EB+hlAkSdysrn3KeQO3h2dvbS4KHicxktxGG9pRHEIxQyiUoiBEqW+mg/JA/FkmO6CstUFgGNZRBqVQLtEWAthFoNFhQkh92dQMejCSDAaW8gEIVW1zxDtprpbY3eISGVUER/yB4DMfiZjvGKVBouYo/kUG6BYI80ALBrbUKKAJlmzrI2NsndmTv8HabEeNCINDVndPTP8UdohwUt4OS1giNKICyMijiBgR12yj+bJTmYBDv5uzcFT9jiVoAsbzmBpSVRyhCgvKpvDYtL3rXylPb26h9oP11k+aM74iLc6tQFcykEYhfNm1QEoHCAqiBQHD9q4HyLLRpebEhO4Lf/sLv2Lm6TXLGZ07FgnmZL3pPi7cPAshI1UYNN/8QHox0BjXcgaYoEBW3bcmgFacsxDoYQGkVUFJ/WNHOde6xQNCeIkFrCqC8OxDxVAMCf+tCkKabzXeG0c1maLtS4FUBccplRdARr3L8gtTiYtC53upVm533sL6hdQA1ZNBaL0F7F4G0a7ouPEnQ37a+7Qx6WylbUTlKQdn2T39BSet+KLSm6xZnw5qHDdAtEcRPueyZLfZTvGzrKwiygK2AWNrQTc7wiu2LHUARe/AplASN9QiURCBNW+GLp/Q14YsU6EjypFJOoLExE7T9CU5ent/HZ4DiIkiXQRp/JKKjrg8BOj+jRodF/giBxsbaoNHtrW0UP0oJWR3ErhgZNCKCQhzUEEHvY1DmrAifLZ05ePYXnECjKMwaBx1p+dkXVDxD8GXjBhuDoD11MWiFT6Jl8Xdc+JInAhwp0WOBaA5ea6SFdnZ4pYNj51QULRv3bwgEE48CSHt71jhDBwrfpQJ/qQVy8syitXnXb8oY/lRxT6ysHUAjaiBtvur1FYA0yHbPg0B3dmTMDE9oYttXHcTbUxjkPUSQkA/4YrCLQaYnLW5hdgSFEYiv+wgYlEgkDND2sj1ll429feINxF0DtGPF3t6e4wglJVCYBskXjA9QwgKJCeA7Yn2rAfrzuj3uctGG8D0OSmIQL0G7C6rsJ9yD0K31dQdQsgegJRwLiW6B+O1bl0FLeWleylkgvEbcH0gnQVDmKIEqRMiZPD8mRKIdOW1UXvSuDLqmDOJzjgzKYtCKeJvQip9Qp89M0TKHjRBVFfgHjaiAstIILZyRZRur2+aF7y3tkx4+Qo6gHQmUlkGQoiUQzKIiqEGBsrEsHqH3NIeBxK6PHWTXsHAAzUiL3u9Ce2pPBcQbBiqgrAT6kuCkeHdKvFUwQXZIzvi3I0ham3cXmh9qICgLZFAMgbKdQIhDghLf26tWbdEC4cWG2nfEYkM+iXoHQUYjQGcUKCWkY2eQeMe6eGCC5NWT/kFhDIq5AKXO523z5fxbB1CCjZA9FkzQuF9QUgLBLOoRBO2pfdRT4L0PDIJLp1cg3s3xCmLRZ1CSAg1fWhBMot0GjUF76p4IOugSSKdA/N5aAQRP4ZRAEAQoR4EKrkBxHyA252BQxA+IHbwEKhQ6gPCSaifQiBqI1TnBgsgRKhScQGlihOABggRikw4FiiEQrwpEUIQC5aEQFUH3eJGDQTlihAoFE4TXiMMISYvelUHG3j4RxJeDnqmAWPgFyYvete+I1ZM0CKoCGRRTBu0HD5oJHMRvRb2BfqJACTVQNSBQ2A8opQZiGcDtCIm3uOogKHO8gnhGUwEllEBVD6CkToCGPYJSfkEF36CkV5A2kCCoCgjQMAItUKAsrJ46E0fNAcQyAAHKqYKKLkHicoFrfBKlQFkRtHB2FjkTj5MG8apAArGjl0AFClQsOoJYApBBI2ogaOeg3uDS+TlqrTmDEgiUo0eoIIGKbVBaAsUJEDxVVANlJZAcIeo5KQ3KkSNEgIoGKK0MIkcohkFZRVA+lfcOKjiC0mjROwfFZdBa8KC8A+grf6C0DxBvT3kE5QcSFAsYlID2VM9A4XD3QRAEqECBnrsD6RgUVgOZW+G8g3IeQXMdQdZ+BC+gSHYFxwJaPRQ4aKkGnjkaZN9g4QXE6hzpoVUK7fri7TYVUAFAX8ugIgGacwOCp4oU6EsJRK82imAQy2jBgubmTFDcByiblUBOq6eEky7EH5PKoJwiiA0HBs21QHEM2oBVuwqgW40sAaKfKuLHiiTohxxUojKoIIGKziBhfWsLNJIkQTEMgrrNAZQSI49BYyQIQgR9zW9z1EFxCjTiMEISKOsE+lIII6MRoESvQCMkKKYOEj6r7A8kCDKaIiiVEiqFeSdQggIdKILm3IHCGMQfICiA9lVB0J7KdQmEFuxu2PcjuAdBDlABJQIFzdtASTxCFKihCkqpgRJuQEUEqjmBolocL3p3A+J1W7dBRRegKAMRa8Q3hsPSGnG/IDbnBAuak0FRFlqSBMmL3p1AESUQn0RlUI4AFWQQGw4MgtMLg6KdQQ0ZhDda3eJzjg9Q4gCB2GAQI+QSJJc5NEjeOeYEYheMEoidXhjEyjYJVFQCVVsgvnhKX7OXwj5BeTUQv17kEfIGCv1teADEQ7fvHvUHyquBckGCvoqanqj2Z9LcPaaH24INvuhd/LOM7aQiqMrLHHGRR+9A0TZo8V2LE30E//sHczfcsP7tlRZIXt9KbVbU3p9FUvtlNVDCD2iuA2jpeZtTiy5pWvmh3n4RnbnhigTxqkAcDS106/2RuBrUCQQZjQIt+gWFvm5zosdfG5mg+kZvvVVP57uRnEcIgYigQQkfoLlOoK9qbc/xo6X2F1aG26TGmypstKJBkQED2S6eWlT4rULn5msCQfLWcYS8gg66AGIJwHbx1P7FB3LlW+NtyO1AoCP+TgYlEKQ0GZRTARVJEBsODIoKcfyc2gS5/KZh8+AFu0f8nQwqoDESlCNGqCCDWEiguQtAx4/wKzZacavRJkkrkPl+cs+gHDFC0J4KAFSL/sf5aCrGe86g2xYsCOocCQSnlwh65B50/Hfn41l6bzwOCXqEXIDmXICOn6NpkDqiWMMRlFIEJRRABf+g2jvxP3eKc2Lhh0tQImBQVASFajxVi1/sEJW3Z2dn4n4QdRB/qthlkLbEcsHfbna8ludxYj/i7zBQAfEIEBQlQOwv3esG3lYc8TvrwQH5jt6A5gYQlPMJmpNBLAN0CZT3ASoQoKIEgsCgaNdAeBsPFQwEu8cwqCCPEK8K+gjKq49QTgZBe0oRFO0ZiO+0uuhlJQv8tgCD+PUyaCAzbnX+nrnr5WJQsc+gc3N3X34/33H/duAg3kGsXVBTe4hKC8RI/3Qocd2B5ggQKtEWj6GqVqtCXcXSTyYJeobnjl8LHKT9e3x80U2Px1jJGy834vcHKw5fCh6kVRY9vzbpggidW3uw9/9L38i7A9UQKEqBuhnz/7RJif171F+cb1C0pyBNq/5kbSzPEX/0ohOoiEH89MIgyGi9BWnarUSitVE+l5BS+CKvCiQQpOhBBWmVewftjf8H36MUvnjAV08hUHGgQSyF//fAfGMGqznF5LDIF70rgOYGCcSOG2pq49UMP4i/YOx6uXQgNt8ZVz8LIdkFAJL67j2Kyj8GKcARes6bhx1au12O6g8HxDXkBKpdDKoeQ/fQbz/HTyzeu4cKBl8gbfFRlHwy0sfwBxrAIEG1DxDEDh6BoD11SUDFIgbx0cCg6CUBMc6HBmJxMSj6EdSf+OBAxs6xd8JnFEh7x0FOD+QHJ0LEWiMSxJeB1PpZ5ihGtVirPRePkwRV3h3XutFu60Is4T4kCWKXW9faU90OB9DlDWPR+4cFggTwIYGiH0EDHR9Bgx4G6PjDAWnHHNTvowgwYLH4cfDPffsYf0ej3Xmq+OHH/wB9fzS1MPvhjwAAAABJRU5ErkJggg==");
+    }
+    #sendButton{
+        color: #2884e4;
+    }</style>
+    <div class="center">
+        <div class="chat">
+          <div class="contact">
+              <div class="bar">
+                <div class="pic stark"></div>
+                <div class="name">
+                    ChatBot by EA
+                </div>
+                <div class="seen">
+                  Today at 12:56
+                </div>
+              </div>
+          </div>
+          <div class="messages" id="chat">
+            <div id="messagesContent">
+
+            </div>
+            <div class="message stark" id="starkIsTyping">
+              <div class="typing typing-1"></div>
+              <div class="typing typing-2"></div>
+              <div class="typing typing-3"></div>
+            </div>
+          </div>
+          <div class="input">
+            <input placeholder="Type your message here!" id="inputMessage" type="text" /><i class="fas fa-paper-plane" id="sendButton"></i>
+          </div>
+        </div>
+      </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js" integrity="sha512-ayb5R/nKQ3fgNrQdYynCti/n+GD0ybAhd3ACExcYvOR2J1o3HebiAe/P0oZDx5qwB+xkxuKG6Nc0AFTsPT/JDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+    <script type="text/javascript">
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// SOCKJS Çözümü/////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+        var baseAddress = 'http://localhost:8080';
+        var socket = new SockJS(baseAddress + '/chat');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic', function (message) {
+                $('#starkIsTyping').show();
+                var item = document.createElement('li');
+                item.textContent = message.toString();
+                $("#messagesContent").append('<div class="message stark">' + message.body + '</div>');
+                $('#starkIsTyping').hide();
+                chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+            });
+        });
+
+        let chat = document.getElementById('chat');
+          chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+          $('#starkIsTyping').hide();
+          $("#inputMessage").keyup(function(message) {
+              $('#starkIsTyping').hide();
+              if (event.keyCode === 13) {
+                  $("#sendButton").click();
+              }
+          });
+
+        $("#sendButton").click(function(e) {
+            e.preventDefault();
+            if($("#inputMessage").val() != ''){
+                stompClient.send("/chat", {},
+                    JSON.stringify({'message':$("#inputMessage").val()}));
+              $("#messagesContent").append('<div class="message parker">' + $("#inputMessage").val() + '</div>');
+              $("#inputMessage").val('');
+              chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+            }
+          });
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////Socket.io Çözümü (Aynı Port Üzerinde Dinleme Yapılmıyor)///////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   var socket = io.connect("http://localhost:8080");
+        //   console.log(socket);
+        //   let chat = document.getElementById('chat');
+        //   chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+        //   $('#starkIsTyping').hide();
+        //   $("#inputMessage").keyup(function(msg) {
+        //       $('#starkIsTyping').hide();
+        //       if (event.keyCode === 13) {
+        //           $("#sendButton").click();
+        //       }
+        //   });
+        //
+        //   $("#sendButton").click(function(e) {
+        //     e.preventDefault();
+        //     if($("#inputMessage").val() != ''){
+        //       socket.emit('/chat',$("#inputMessage").val());
+        //       socket.send(JSON.stringify({
+        //         'message': $("#inputMessage").val()
+        //     }))
+        //       $("#messagesContent").append('<div class="message parker">' + $("#inputMessage").val() + '</div>');
+        //       $("#inputMessage").val('');
+        //       chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+        //     }
+        //   });
+        //   socket.on('/topic', function(msg) {
+        //     $('#starkIsTyping').show();
+        //       var item = document.createElement('li');
+        //       item.textContent = msg;
+        //        $("#messagesContent").append('<div class="message stark">' + msg.body + '</div>');
+        //         $('#starkIsTyping').hide();
+        //     chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+        // });
+</script>
+</body>
+</html>
